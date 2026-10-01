@@ -8,40 +8,71 @@
 </head>
 <body>
 
-    <div class="container">
-        <h2>Workplace Attendance Log 📋</h2>
+    <div class="dashboard-wrapper">
+        <!-- Form Section -->
+        <div class="card form-card">
+            <h2>Workplace Attendance Log 📋</h2>
+            <form id="attendance_form">
+                <div class="form-group">
+                    <label for="employee_name">Full Name 👤</label>
+                    <input type="text" id="employee_name" name="employee_name" placeholder="e.g. Engr. Mustapha" required>
+                </div>
 
-        <form id="attendance_form">
-            <div class="form-group">
-                <label for="employee_name">Full Name 👤</label>
-                <input type="text" id="employee_name" name="employee_name" placeholder="e.g. Engr. Mustapha" required>
+                <div class="form-group">
+                    <label for="designation">Designation 💼</label>
+                    <input type="text" id="designation" name="designation" placeholder="e.g. Senior Engineer" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department 🏢</label>
+                    <input type="text" id="department" name="department" placeholder="e.g. Fish Technology" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="section">Section 📂</label>
+                    <input type="text" id="section" name="section" placeholder="e.g. Fish Food Engineering" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="action_type">Action Type 🔄</label>
+                    <select id="action_type" name="action_type" required>
+                        <option value="Check-In">Check-In</option>
+                        <option value="Check-Out">Check-Out</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Attendance</button>
+            </form>
+        </div>
+
+        <!-- Live Records Table Section -->
+        <div class="card table-card">
+            <div class="table-header">
+                <h2>Logged Records 📊</h2>
+                <div class="table-actions">
+                    <button type="button" id="export_btn" class="btn btn-export">Download CSV 📥</button>
+                    <button type="button" id="clear_btn" class="btn btn-clear">Clear 🗑️</button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="designation">Designation 💼</label>
-                <input type="text" id="designation" name="designation" placeholder="e.g. Senior Engineer" required>
+            <div class="table-container">
+                <table id="records_table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Name</th>
+                            <th>Designation</th>
+                            <th>Department</th>
+                            <th>Section</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records_body">
+                        <!-- Populated dynamically via script.js -->
+                    </tbody>
+                </table>
             </div>
-
-            <div class="form-group">
-                <label for="department">Department 🏢</label>
-                <input type="text" id="department" name="department" placeholder="e.g. Fish Technology" required>
-            </div>
-
-            <div class="form-group">
-                <label for="section">Section 📂</label>
-                <input type="text" id="section" name="section" placeholder="e.g. Fish Food Engineering" required>
-            </div>
-
-            <div class="form-group">
-                <label for="action_type">Action Type 🔄</label>
-                <select id="action_type" name="action_type" required>
-                    <option value="Check-In">Check-In</option>
-                    <option value="Check-Out">Check-Out</option>
-                </select>
-            </div>
-
-            <button type="submit">Submit Attendance</button>
-        </form>
+        </div>
     </div>
 
     <script src="script.js"></script>

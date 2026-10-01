@@ -1,9 +1,43 @@
 const form = document.getElementById('attendance_form');
+const recordsBody = document.getElementById('records_body');
+const exportBtn = document.getElementById('export_btn');
+const clearBtn = document.getElementById('clear_btn');
 
+// Render stored records into the table
+function renderRecords() {
+    const records = JSON.parse(localStorage.getItem('attendance_records')) || [];
+    recordsBody.innerHTML = '';
+
+    if (records.length === 0) {
+        recordsBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty-state">No attendance records logged yet.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    // Display latest entries first
+    [...records].reverse().forEach(record => {
+        const tr = document.createElement('tr');
+        const badgeClass = record.action === 'Check-In' ? 'badge-checkin' : 'badge-checkout';
+
+        tr.innerHTML = `
+            <td>${record.timestamp}</td>
+            <td><strong>${record.name}</strong></td>
+            <td>${record.designation}</td>
+            <td>${record.department}</td>
+            <td>${record.section}</td>
+            <td><span class="badge ${badgeClass}">${record.action}</span></td>
+        `;
+        recordsBody.appendChild(tr);
+    });
+}
+
+// Handle attendance submission
 form.addEventListener('submit', function (event) {
     event.preventDefault();
 
-    // 1. Gather values from form inputs
     const newRecord = {
         timestamp: new Date().toLocaleString(),
         name: document.getElementById('employee_name').value.trim(),
@@ -13,21 +47,56 @@ form.addEventListener('submit', function (event) {
         action: document.getElementById('action_type').value
     };
 
-    try {
-        // 2. Retrieve existing records from browser storage (or initialize an empty list)
-        const storedRecords = JSON.parse(localStorage.getItem('attendance_records')) || [];
+    const records = JSON.parse(localStorage.getItem('attendance_records')) || [];
+    records.push(newRecord);
+    localStorage.setItem('attendance_records', JSON.stringify(records));
 
-        // 3. Append the new record and save back to localStorage
-        storedRecords.push(newRecord);
-        localStorage.setItem('attendance_records', JSON.stringify(storedRecords));
+    form.reset();
+    renderRecords();
+    alert('Attendance logged successfully! ✅');
+});
 
-        // 4. Reset form fields and provide feedback
-        form.reset();
-        alert('Attendance logged successfully! ✅');
-        console.log('Saved records:', storedRecords);
+// Export to CSV
+exportBtn.addEventListener('click', function () {
+    const records = JSON.parse(localStorage.getItem('attendance_records')) || [];
 
-    } catch (error) {
-        console.error('Storage error:', error);
-        alert('Failed to save record to local storage.');
+    if (records.length === 0) {
+        alert('No attendance records available to export.');
+        return;
+    }
+
+    const headers = ['Timestamp', 'Full Name', 'Designation', 'Department', 'Section', 'Action'];
+    const rows = records.map(r => [
+        `"${r.timestamp}"`,
+        `"${r.name}"`,
+        `"${r.designation}"`,
+        `"${r.department}"`,
+        `"${r.section}"`,
+        `"${r.action}"`
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'attendance_log.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
+
+// Clear records
+clearBtn.addEventListener('click', function () {
+    const records = JSON.parse(localStorage.getItem('attendance_records')) || [];
+    if (records.length === 0) return;
+
+    if (confirm('Are you sure you want to clear all stored attendance records?')) {
+        localStorage.removeItem('attendance_records');
+        renderRecords();
     }
 });
+
+// Initial load
+document.addEventListener('DOMContentLoaded', renderRecords);

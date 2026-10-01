@@ -1,3 +1,6 @@
 Timestamp,Name,Designation,Department,Section,Action
 "2026-10-01 12:12:00","Engr. Mustapha","Senior Engineer","Fish Technology","Fish Food Engineering",Check-In
 "2026-10-01 12:18:13","Engr. Mustapha","Senior Engineer","Fish Technology","Fish Food Engineering",Check-Out
+"2026-10-01 12:32:26","engr yomi",researcher,biology,"plant nutrition",Check-In
+"2026-10-01 12:38:09","Engr Saliu","Lecturer 2","Civil Engineering","engineering college",Check-In
+"2026-10-01 13:11:51",seyi,"web developer","software engineering department","cybersecurity section",Check-In
